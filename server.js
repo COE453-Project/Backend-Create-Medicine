@@ -29,7 +29,7 @@ app.post('/', (req, res, next) => {
         storedAtTimestamp: storedAtTimestamp
     };
 
-    // End the request by sending the response
+    // Send the response
     res.json(response);
     next();
 });
