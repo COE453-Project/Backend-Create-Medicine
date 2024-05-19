@@ -4,37 +4,42 @@ const cors = require('cors');
 
 const app = express();
 const port = 3000;
+const db = 'https://backend-database-olz2xjbmza-uc.a.run.app'
 
 app.use(express.json());
 
 app.use(cors());
 
 app.post('/', (req, res, next) => {
-    // Get the details of the medicine
-    const name = req.body.name;
-    const description = req.body.description;
-    const productionDate = req.body.productionDate;
-    const expiryDate = req.body.expiryDate;
+  // Get the details of the medicine
+  const name = req.body.name;
+  const description = req.body.description;
+  const productionDate = req.body.productionDate;
+  const expiryDate = req.body.expiryDate;
+  const medicineData = {
+    name: `${name}`,
+    description: `${description}`,
+    productionDate: `${productionDate}`,
+    expiryDate: `${expiryDate}`
+  };
 
-    // TODO save the details to the database
-
-    // Construct the response
-    // TODO get the id from the database
-    id = 1;
-    const riyadhTime = new Date().toLocaleString('en-US', {timeZone: 'Asia/Riyadh'});
-    const storedAtTimestamp = new Date(riyadhTime).toISOString();
-    const response = {
-        id: id,
-        name: name,
-        description: description,
-        productionDate: productionDate,
-        expiryDate: expiryDate,
-        storedAtTimestamp: storedAtTimestamp
-    };
-
-    // Send the response
+  fetch(`${db}/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(medicineData)
+  })
+  .then(response => {
+    console.log(data);
+    res.status(200)
     res.json(response);
-    next();
+  })
+  .catch(error => {
+    console.error('An error occurred:', error)
+    res.status(500).send('Internal server error occurred');
+  });
+  next();
 });
 
 app.use(logResponse);
