@@ -10,35 +10,24 @@ app.use(express.json());
 
 app.use(cors());
 
-app.post('/', (req, res, next) => {
+app.post('/', async (req, res, next) => {
   // Get the details of the medicine
-  const name = req.body.name;
-  const description = req.body.description;
-  const productionDate = req.body.productionDate;
-  const expiryDate = req.body.expiryDate;
+  let options = { method: 'POST' };
   const medicineData = {
-    name: `${name}`,
-    description: `${description}`,
-    productionDate: `${productionDate}`,
-    expiryDate: `${expiryDate}`
+    name: req.body.name,
+    description: req.body.description,
+    productionDate: req.body.productionDate,
+    expiryDate: req.body.expiryDate
   };
+  try {
+    const response = await fetch(db,options)
+    res.status(response.status)
+    res.json(response.json())
+  } catch {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred while fetching data' });
+  }
 
-  fetch(`${db}/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(medicineData)
-  })
-  .then(response => {
-    console.log(data);
-    res.status(200)
-    res.json(response);
-  })
-  .catch(error => {
-    console.error('An error occurred:', error)
-    res.status(500).send('Internal server error occurred');
-  });
   next();
 });
 
