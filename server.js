@@ -1,10 +1,13 @@
 const express = require('express');
 const logResponse = require('./log.js');
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
+
+app.use(cors());
 
 app.post('/', (req, res, next) => {
     // Get the details of the medicine
