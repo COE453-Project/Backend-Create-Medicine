@@ -12,8 +12,7 @@ app.use(cors());
 
 app.post('/', async (req, res, next) => {
   // Get the details of the medicine
-
-  const medicineData = {
+  const medicine = {
     name: req.body.name,
     description: req.body.description,
     productionDate: req.body.productionDate,
@@ -22,19 +21,20 @@ app.post('/', async (req, res, next) => {
   let options = {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
     },
-    body: JSON.stringify(medicineData) // Stringify and include the medicineData in the body of your request
+    body: JSON.stringify(medicine)
   };
   try {
-    const response = await fetch(db,options)
-    res.status(response.status)
-    res.json(response.json())
-  } catch {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'An error occurred while fetching data' });
+    const response = await fetch(db, options);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    res.status(200)
+    res.json(await response.json());
+  } catch (error) {
+    res.status(500).send('Error:', error)
   }
-
   next();
 });
 
