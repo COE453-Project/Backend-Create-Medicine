@@ -12,12 +12,19 @@ app.use(cors());
 
 app.post('/', async (req, res, next) => {
   // Get the details of the medicine
-  let options = { method: 'POST' };
+
   const medicineData = {
     name: req.body.name,
     description: req.body.description,
     productionDate: req.body.productionDate,
     expiryDate: req.body.expiryDate
+  };
+  let options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(medicineData) // Stringify and include the medicineData in the body of your request
   };
   try {
     const response = await fetch(db,options)
